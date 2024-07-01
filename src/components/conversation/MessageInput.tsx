@@ -9,6 +9,7 @@ import {
 	SendIcon,
 } from "lucide-react";
 import { ChangeEvent, useState } from "react";
+import { CldUploadButton, CldUploadWidget } from "next-cloudinary";
 
 const MessageInput = () => {
 	const [message, setMessage] = useState("");
@@ -18,7 +19,7 @@ const MessageInput = () => {
 		handleSubmit,
 		setValue,
 		formState: { errors },
-    reset
+		reset,
 	} = useForm<FieldValues>({
 		defaultValues: {
 			message: "",
@@ -26,23 +27,37 @@ const MessageInput = () => {
 	});
 
 	const onSubmit: SubmitHandler<FieldValues> = (data) => {
-
 		axios.post("/api/messages", {
 			...data,
 			conversationId,
 		});
 
-    reset();
+		reset();
 	};
 
-	
+	const uploadHandler = (result: any) => {
+		axios.post("/api/messages", {
+			image: result?.info?.secure_url,
+			conversationId,
+		});
+	};
 
 	return (
 		<>
 			<div className="py-4 px-4 bg-white border-t flex items-center gap-2 lg:pag-4 w-full">
-				<div className="cursor-pointer bg-gray-300 p-1 rounded-md hover:opacity-75 transition">
-					<ImageIcon></ImageIcon>
-				</div>
+				<CldUploadWidget
+					options={{ maxFiles: 1 }}
+					onUploadAdded={uploadHandler}
+					uploadPreset="dfmwzlrw"
+				>
+					{({ open }) => {
+						return (
+							<div onClick={()=>open()} className="cursor-pointer bg-gray-300 p-1 rounded-md hover:opacity-75 transition">
+								<ImageIcon></ImageIcon>
+							</div>
+						);
+					}}
+				</CldUploadWidget>
 				<form
 					onSubmit={handleSubmit(onSubmit)}
 					className="flex items-center gap-2 w-full"
@@ -51,7 +66,6 @@ const MessageInput = () => {
 						<input
 							className="text-black font-light py-2 px-4 bg-neutral-50 w-full rounded-full focus:outline-none "
 							id="message"
-              
 							placeholder="Message..."
 							{...register("message")}
 						/>
