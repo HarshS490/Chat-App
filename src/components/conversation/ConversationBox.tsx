@@ -65,9 +65,8 @@ const ConversationBox = ({ data, selected }: ConversationBoxProps) => {
 						<p className="text-sm font-medium text-gray-900">{data.name || otherUser?.name}</p>
 						<div className="text-xs flex relative overflow-hidden  overflow-ellipsis">
 							<p className="overflow-hidden overflow-ellipsis line-clamp-1">{lastMessageText}</p>
-							<span className="text-xs absolute right-0 ">{"hello"}</span>
 							{lastMessage?.createdAt && (
-								<></>
+							<span className="text-xs absolute right-0 ">{format(new Date(lastMessage.createdAt),'p')}</span>
 							)}
 
 						</div>

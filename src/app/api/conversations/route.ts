@@ -59,6 +59,10 @@ export async function POST(req:Request){
             userIds:{
               equals:[userId,currentUser.id]
             }
+          },{
+            userIds:{
+              equals:[currentUser.id]
+            }
           }
         ]
       }}

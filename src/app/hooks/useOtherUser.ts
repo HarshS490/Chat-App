@@ -19,7 +19,7 @@ const useOtherUser = (conversation:FullConversationType|{
       return conversation.users[0];
     }
     return otherUser[0];
-  },[session?.data?.user?.email,conversation.users]);
+  },[session?.data?.user?.email,conversation?.users]);
   return otherUser;
 }
 

@@ -8,7 +8,7 @@ type Props = {
 
 const Avatar = ({user}: Props) => {
   return (
-    <div className='relative'>
+    <div className='relative flex items-center'>
       <div className='relative inline-block rounded-full overflow-hidden h-8 w-8 md:h-9 md:w-9'>
         <Image src={user?.image||'/userplaceholder.jpg'} alt='Avatar' width={40} height={40} className='w-auto h-auto'/>
       </div>

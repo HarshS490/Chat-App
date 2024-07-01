@@ -1,7 +1,9 @@
 import { useParams } from "next/navigation";
 import { useMemo } from "react";
 
-// gives the current conversationId and isOpen 
+/**
+ * @returns conversationId and isOpen value for the current coversation
+*/ 
 const useConversation = ()=>{
   const params = useParams();
   const conversationId = useMemo(()=>{
