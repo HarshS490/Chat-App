@@ -24,8 +24,8 @@ const ConversationId = async ({params}:{params:Params})=>{
       <div className="h-full flex flex-col">
         <Header conversation={conversation} ></Header>
         {/* render the messages here */}
-        
-        <Body messages={messages}></Body>
+
+        <Body intialMessages={messages}></Body>
 
         {/* send messages */}
         <MessageInput></MessageInput>

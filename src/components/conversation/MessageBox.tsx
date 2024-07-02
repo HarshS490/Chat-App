@@ -1,8 +1,10 @@
+import ConversationId from "@/app/(site)/conversations/[conversationId]/page";
 import { FullMessageType } from "@/app/types";
 import clsx from "clsx";
 import { useSession } from "next-auth/react";
-import React from "react";
-
+import Image from "next/image";
+import React, { useEffect } from "react";
+import {format} from "date-fns"
 type Props = {
 	data: FullMessageType;
 	isLast?: boolean;
@@ -28,19 +30,45 @@ const MessageBox = ({ data, isLast }: Props) => {
   )
 
   const message=clsx(
-    "text-sm w-fit overflow-hidden",isOwn?"bg-sky-500 text-white":"bg-gray-100",
-    data.image?"rounded-md":"rounded-full py-2 px-3"
+    "text-sm w-fit overflow-hidden relative",isOwn?"bg-sky-600 text-white rounded-l-2xl rounded-r-md":"rounded-r-2xl rounded-l-md bg-gray-100",
+    data.image?"rounded-md":" py-2 px-3"
   )
+
 	return( 
   <div className={container}>
     <div className={body}>
-      <div className="flex items-center gap-1">
-        <div className="text-sm text-gray-500">
+      <div className="flex flex-col items-end gap-1">
+        <div className="text-xs text-gray-500">
           {data.sender.name}
+          
         </div>
-        <div className="te">
+        <div className={message}>
+          {
+            data.image?(
+              <>
+              <Image alt="Image" height="288" width="288" src={data?.image}
+                className="object-cover cursor-pointer  hover:scale-110 transition translate"
+              ></Image>
+              <span className="absolute right-0 bottom-0">{format(new Date(data.createdAt),'p')}</span>
+              </>
+            ):(
+              <div>
+                
+                <p className="relative mb-1">
+                   {data.body}
+                </p>
+                <p className="relative">
+                  &nbsp;
+                <span className="text-xs absolute right-0 ">{format(new Date(data.createdAt),'p')}</span>
 
+                </p>
+
+              </div>
+            )
+          }
+          
         </div>
+        
       </div>
     </div>
   </div>
