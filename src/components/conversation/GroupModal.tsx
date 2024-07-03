@@ -48,7 +48,10 @@ const GroupModal = ({ isOpen, onClose, users }: Props) => {
 					id: "GroupCreation",
 				})
 			)
-			.finally(() => setIsLoading(false));
+			.finally(() =>{
+				setIsLoading(false);
+				onClose();
+			});
 	};
 
 	return (
@@ -81,10 +84,10 @@ const GroupModal = ({ isOpen, onClose, users }: Props) => {
             </Select>
           </div>
           <div className="flex justify-end space-x-2 space-x-reverse gap-2 my-2">
-            <Button className="bg-blue-600 text-white hover:bg-blue-400" type="submit" variant={'ghost'}>
+            <Button className="bg-blue-600 text-white hover:bg-blue-400" type="submit" variant={'ghost'} disabled={isLoading}>
               Create
             </Button>
-            <Button className="" type="button" variant={'secondary'} onClick={onClose}>
+            <Button className="" type="button" variant={'secondary'} onClick={onClose} disabled={isLoading}>
               Cancel
             </Button>
             

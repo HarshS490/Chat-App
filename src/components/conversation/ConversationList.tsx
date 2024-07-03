@@ -41,7 +41,7 @@ const ConversationList = ({ initialItems,users }: Props) => {
 					return prev;
 				}
 
-				return [...prev,newConversation];
+				return [newConversation,...prev];
 			})
 		} 
 
@@ -72,7 +72,7 @@ const ConversationList = ({ initialItems,users }: Props) => {
 
 	return (
 		<>
-		{isGroupModalOpen&&<GroupModal isOpen={isGroupModalOpen} onClose={()=>setIsGroupModalOpen(false)} users={users}></GroupModal>}
+		{isGroupModalOpen?(<GroupModal isOpen={isGroupModalOpen} onClose={()=>setIsGroupModalOpen(false)} users={users}></GroupModal>):<></>}
 		<aside
 			className={
 				isOpen
