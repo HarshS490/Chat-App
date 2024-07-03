@@ -3,7 +3,7 @@ import { User } from '@prisma/client'
 import React from 'react'
 import Image from 'next/image';
 type Props = {
-  user:User
+  user:User|null
 }
 
 const Avatar = ({user}: Props) => {

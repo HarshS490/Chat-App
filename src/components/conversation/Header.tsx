@@ -19,7 +19,7 @@ const Header = ({ conversation }: Props) => {
 	
 	const statusText = useMemo(() => {
 		return "Active";
-	}, [conversation]);
+	}, []);
 	return (
 		<>
 

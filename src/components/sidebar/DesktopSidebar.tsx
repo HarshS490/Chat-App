@@ -6,7 +6,7 @@ import DesktopItem from './DesktopItem';
 import { User } from '@prisma/client';
 import Avatar from './Avatar';
 type DesktopSidebar = {
-  currentUser:User
+  currentUser:User|null,
 }
 
 export default function DesktopSidebar({currentUser}: DesktopSidebar) {

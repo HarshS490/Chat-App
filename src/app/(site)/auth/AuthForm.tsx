@@ -1,13 +1,11 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { error } from "console";
 import axios, { AxiosError } from "axios";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import toast from 'react-hot-toast';
-import {signIn, useSession} from 'next-auth/react';
-import { redirect } from "next/dist/server/api-utils";
+import toast from "react-hot-toast";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 type Props = {};
 
@@ -36,51 +34,50 @@ export default function AuthForm({}: Props) {
 	});
 	const changeFormType = () => {
 		setIsSignIn(!isSignIn);
-		
 	};
 
-	useEffect(()=>{
-		if(session?.status==='authenticated'){
-			console.log('authenticated');
-			router.push('/users');
+	useEffect(() => {
+		if (session?.status === "authenticated") {
+			console.log("authenticated");
+			router.push("/users");
 		}
-	},[session?.status,router])
+	}, [session?.status, router]);
 
-	const onSubmit: SubmitHandler<formField> =async (data) => {
+	const onSubmit: SubmitHandler<formField> = async (data) => {
 		setIsLoading(true);
-		
+
 		if (isSignIn) {
 			// login
-			const signInPromise= signIn('credentials',{
+			const signInPromise = signIn("credentials", {
 				...data,
-				redirect:false
-			}).then((response)=>{
-				console.log(response)
-				if(response?.error){
-					toast.error('Invalid credentials');
-				}
-				if(response?.ok && !response.error){
-					toast.success('Logged In');
-				}
-			}).finally(()=>setIsLoading(false));
-			
+				redirect: false,
+			})
+				.then((response) => {
+					console.log(response);
+					if (response?.error) {
+						toast.error("Invalid credentials");
+					}
+					if (response?.ok && !response.error) {
+						toast.success("Logged In");
+					}
+				})
+				.finally(() => setIsLoading(false));
 		} else {
 			// register
-			try{
-				const response = await axios.post('/api/register',data);
-				
-				signIn('credentials',data);
-			}
-			catch(error){
-				toast.error('Something went wrong',{
-					duration:1000
+			try {
+				const response = await axios.post("/api/register", data);
+
+				signIn("credentials", data);
+			} catch (error) {
+				toast.error("Something went wrong", {
+					duration: 1000,
 				});
-				if(error instanceof AxiosError){
-					console.log("Error:",error.message);
-				}else{
-					console.log("Error occured while signup",error);
+				if (error instanceof AxiosError) {
+					console.log("Error:", error.message);
+				} else {
+					console.log("Error occured while signup", error);
 				}
-			}finally{
+			} finally {
 				setIsLoading(false);
 			}
 		}
@@ -88,15 +85,16 @@ export default function AuthForm({}: Props) {
 
 	const SocialAction = (action: string) => {
 		setIsLoading(true);
-		signIn(action,{redirect:false}).then((response)=>{
-			if(response?.error){
-				toast.error('Error');
-			}
-			if(response?.ok && !response?.error){
-				toast.success('Logged In');
-			}
-		}).finally(()=>setIsLoading(false));
-		
+		signIn(action, { redirect: false })
+			.then((response) => {
+				if (response?.error) {
+					toast.error("Error");
+				}
+				if (response?.ok && !response?.error) {
+					toast.success("Logged In");
+				}
+			})
+			.finally(() => setIsLoading(false));
 	};
 	return (
 		<div className="min-h-screen flex items-center">
@@ -104,7 +102,7 @@ export default function AuthForm({}: Props) {
 				<div className="bg-white shadow-md rounded border broder-gray-200 px-8 pt-6 pb-8 mb-4">
 					{/* sign in form */}
 					{isSignIn ? (
-						<form onSubmit={handleSubmit(onSubmit)} >
+						<form onSubmit={handleSubmit(onSubmit)}>
 							<div className="mb-4">
 								<label
 									className="block text-gray-700 text-sm font-bold mb-2"
@@ -119,9 +117,7 @@ export default function AuthForm({}: Props) {
 									placeholder="Email"
 									{...register("email")}
 								/>
-								<p className="text-red-500 text-sm">
-									{errors?.name?.message}
-								</p>
+								<p className="text-red-500 text-sm">{errors?.name?.message}</p>
 							</div>
 							<div className="mb-3">
 								<label
@@ -173,9 +169,7 @@ export default function AuthForm({}: Props) {
 									placeholder="Username"
 									{...register("name")}
 								/>
-								<p className="text-red-500 text-sm">
-									{errors?.name?.message}
-								</p>
+								<p className="text-red-500 text-sm">{errors?.name?.message}</p>
 							</div>
 							<div className="mb-4">
 								<label

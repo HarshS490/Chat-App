@@ -73,7 +73,7 @@ const GroupModal = ({ isOpen, onClose, users }: Props) => {
               
               
 						/>
-            {errors.name && <p className="text-xs text-red-500 absolute bottom-0 left-1">{errors.name.message}</p>}
+            {errors?.name && <p className="text-xs text-red-500 absolute bottom-0 left-1">{errors.name.message?.toString()}</p>}
 					</div>
           <div>
             <Select disabled={isLoading} label="Members" value={members} options={users.map((user)=>({value:user.id,label:user.name}))} onChange={(value)=>setValue('members',value,{shouldValidate:true})}>
