@@ -1,5 +1,8 @@
+"use client";
+import { redirect } from 'next/dist/server/api-utils';
 import Link from 'next/link';
 import React from 'react'
+import toast from 'react-hot-toast';
 
 type MobileItemProps = {
   label: string;
@@ -18,6 +21,7 @@ export default function MobileItem({
 }: MobileItemProps) {
   const handleClick = ()=>{
     if(onClick){
+      toast.success("Signed Out");
       return onClick();
     }
   }

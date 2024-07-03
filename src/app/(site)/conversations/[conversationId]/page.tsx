@@ -4,6 +4,8 @@ import getMessages from "@/app/actions/getMessages";
 import EmptyState from "@/components/EmptyState";
 import Body from "@/components/conversation/Body";
 import Header from "@/components/conversation/Header";
+import { Suspense } from "react";
+import Loading from "../Loading";
 interface Params{
   conversationId: string;
 }
@@ -22,6 +24,7 @@ const ConversationId = async ({params}:{params:Params})=>{
 
     <div className="lg:pl-80 h-full">
       <div className="h-full flex flex-col">
+        <Suspense fallback={<Loading/>}>
         <Header conversation={conversation} ></Header>
         {/* render the messages here */}
 
@@ -29,6 +32,7 @@ const ConversationId = async ({params}:{params:Params})=>{
 
         {/* send messages */}
         <MessageInput></MessageInput>
+        </Suspense>
       </div>
       
     </div>

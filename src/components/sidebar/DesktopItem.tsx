@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
+import toast from "react-hot-toast";
 
 type DesktopItemProps = {
 	label: string;
@@ -19,6 +20,9 @@ export default function DesktopItem({
 }: DesktopItemProps) {
 	const handleClick = () => {
 		if (onClick) {
+			toast.success('Signed out',{
+				id:"signout"
+			})
 			return onClick();
 		}
 	};

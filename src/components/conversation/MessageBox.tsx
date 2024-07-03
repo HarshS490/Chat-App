@@ -12,7 +12,7 @@ type Props = {
 
 const MessageBox = ({ data, isLast }: Props) => {
 	const session = useSession();
-
+  // check if the message is sent by the user himeself.
 	const isOwn = session?.data?.user?.email === data?.sender?.email;
 	const seenList = (data.seen || []).filter(
 		(user) => user.email !== data?.sender?.email
@@ -52,23 +52,27 @@ const MessageBox = ({ data, isLast }: Props) => {
               <span className="absolute right-0 bottom-0">{format(new Date(data.createdAt),'p')}</span>
               </>
             ):(
-              <div>
+              <div className="p-1">
                 
-                <p className="relative mb-1">
+                <p className=" mb-1 ">
                    {data.body}
+                   &nbsp;
                 </p>
-                <p className="relative">
-                  &nbsp;
-                <span className="text-xs absolute right-0 ">{format(new Date(data.createdAt),'p')}</span>
-
-                </p>
+                  <span className="text-[10px] mr-0 absolute right-1 bottom-0 min-w-max block">{format(new Date(data.createdAt),'p')}</span>
+                
 
               </div>
             )
           }
           
         </div>
-        
+        {
+          isLast && isOwn && seenList.length>0 && (
+            <div className="text-xs font-light text-gray-500">
+              seen
+            </div>
+          )
+        }
       </div>
     </div>
   </div>

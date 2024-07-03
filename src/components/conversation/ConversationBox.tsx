@@ -1,3 +1,4 @@
+"use client";
 import useOtherUser from "@/app/hooks/useOtherUser";
 import { FullConversationType } from "@/app/types";
 import { useSession } from "next-auth/react";
@@ -5,6 +6,7 @@ import { useRouter } from "next/navigation";
 import React, { useCallback, useMemo } from "react";
 import Avatar from "../sidebar/Avatar";
 import { format } from "date-fns";
+import GroupAvatar from "./GroupAvatar";
 type ConversationBoxProps = {
 	data: FullConversationType;
 	selected?: boolean;
@@ -58,7 +60,7 @@ const ConversationBox = ({ data, selected }: ConversationBoxProps) => {
 			onClick={handleClick}
 			className="w-full p-2 relative flex items-center space-x-3 hover:bg-neutral-100 rounded-lg transition cursor-pointer"
 		>
-			<Avatar user={otherUser}></Avatar>
+			{data.isGroup?<><GroupAvatar group={data}></GroupAvatar></>:<Avatar user={otherUser}></Avatar>}
 			<div className="min-w-0 flex-1">
 				<div className="flex justify-between mb-1 items-center w-full">
 					<div className="flex flex-col gap-1 w-full">

@@ -1,5 +1,6 @@
 import { getCurrentUser } from "@/app/actions/getCurrentUser";
 import prisma from "@/lib/prismadb"
+import { pusherServer } from "@/lib/pusher";
 import { NextResponse } from "next/server";
 
 export async function POST(
@@ -45,6 +46,7 @@ export async function POST(
       }
     });
 
+    // add the new message to the messages list of the conversation. 
     const updatedConversation = await prisma.conversation.update({
       where:{
         id:conversationId,
@@ -67,9 +69,23 @@ export async function POST(
       }
     });
 
-    return NextResponse.json(newMessage);
+    // channel for the chat room -> emit an event for new message .
+    await pusherServer.trigger(conversationId,'newMessages',newMessage);
+    
+    //as new messages will be added at the end of the conversation list.
+    const lastMessage = updatedConversation.messages[updatedConversation.messages.length-1]; 
+
+    // 
+    updatedConversation.users.map((user)=>{
+      pusherServer.trigger(user.email,'updatedConversation',{
+        id:conversationId,
+        messages:[lastMessage]
+      })
+    })
+    return NextResponse.json(newMessage,{status:200});
     
   } catch (error) {
-    
+    console.log("Error while Message creation: ",error);
+    return new NextResponse('Internal Server Error',{status:500});
   }
 }

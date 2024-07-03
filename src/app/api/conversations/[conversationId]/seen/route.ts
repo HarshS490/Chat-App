@@ -1,6 +1,7 @@
 import { getCurrentUser } from "@/app/actions/getCurrentUser";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prismadb";
+import { pusherServer } from "@/lib/pusher";
 interface IParams {
 	conversationId?: string;
 }
@@ -13,7 +14,6 @@ export async function POST(req: Request, { params }: { params: IParams }) {
 		if (!currentUser?.id || !currentUser?.email) {
 			return new NextResponse("Unauthorized", { status: 401 });
 		}
-
 		const conversation = await prisma.conversation.findUnique({
 			where: {
 				id: conversationId,
@@ -38,7 +38,7 @@ export async function POST(req: Request, { params }: { params: IParams }) {
     if(!lastMesage){
       return NextResponse.json(conversation);
     }
-
+    // add current user to the last messages seen list
     const updatedMessage  = await prisma.message.update({
       where:{
         id:lastMesage.id
@@ -55,9 +55,12 @@ export async function POST(req: Request, { params }: { params: IParams }) {
           }
         }
       }
-    })
+    });
+
+
+    return new NextResponse("setted unseen messages to seen",{status:200});
 	} catch (error) {
-		console.log(error, "Error_Messages_SEEN");
+		console.log("error occured while setting messages seen:",error);
 		return new NextResponse("Internal Error", { status: 500 });
 	}
 }

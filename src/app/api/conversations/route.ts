@@ -1,6 +1,7 @@
 import { getCurrentUser } from "@/app/actions/getCurrentUser";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prismadb"
+import { pusherClient, pusherServer } from "@/lib/pusher";
 
 
 export async function POST(req:Request){
@@ -19,8 +20,8 @@ export async function POST(req:Request){
     if(!currentUser?.id || !currentUser?.email){
       return new NextResponse('Unauthorized',{status:401});
     }
-
-    if(isGroup && (!members || members.length||!name)){
+    console.log(userId,isGroup,members,name);
+    if(isGroup && (!members || members.length<1 ||!name)){
       return new NextResponse('invalid data',{status:400});
     }
 
@@ -45,6 +46,13 @@ export async function POST(req:Request){
           users:true
         }
       });
+
+      newConversation.users.map((user)=>{
+        if(user.email){
+          pusherServer.trigger(user.email,'newConversation',newConversation);
+        }
+      })
+
       return NextResponse.json(newConversation);
     }
 
@@ -87,6 +95,12 @@ export async function POST(req:Request){
         users:true
       }
     });
+    
+    // triggering the newConversation event so that all the users related to chat room
+    // are shown they are part of that chatroom.
+    newConversation.users.map((user)=>{
+      pusherServer.trigger(user.email,'newConversation',newConversation);
+    })
 
     return NextResponse.json(newConversation,{status:200});
 
