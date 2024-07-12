@@ -3,13 +3,13 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const publicPath=['/','/login'];
 
-withAuth({
+export default withAuth({
     pages:{
         signIn:"/auth"
     }
 });
 
-export {default} from 'next-auth/middleware';
+
 
 
 export const config = {
