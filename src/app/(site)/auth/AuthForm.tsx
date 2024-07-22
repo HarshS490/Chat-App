@@ -85,7 +85,7 @@ export default function AuthForm({}: Props) {
 
 	const SocialAction = (action: string) => {
 		setIsLoading(true);
-		signIn(action, { redirect: false })
+		signIn(action)
 			.then((response) => {
 				if (response?.error) {
 					toast.error("Error");
@@ -235,6 +235,8 @@ export default function AuthForm({}: Props) {
 						<Button
 							type="button"
 							variant={"outline"}
+							disabled={isLoading}
+							
 							className="flex gap-2 items-center"
 							onClick={() => {
 								SocialAction("google");
@@ -269,6 +271,7 @@ export default function AuthForm({}: Props) {
 						<Button
 							type="button"
 							className="flex gap-2 items-center"
+							disabled={isLoading}
 							onClick={() => {
 								SocialAction("github");
 							}}
