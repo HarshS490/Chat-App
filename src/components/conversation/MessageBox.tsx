@@ -30,14 +30,14 @@ const MessageBox = ({ data, isLast }: Props) => {
   )
 
   const message=clsx(
-    "text-sm w-fit overflow-hidden relative",isOwn?"bg-sky-600 text-white rounded-l-2xl rounded-r-md":"rounded-r-2xl rounded-l-md bg-gray-100",
+    "text-sm w-fit overflow-hidden relative",isOwn?"bg-sky-600 text-white rounded-l-2xl rounded-br-2xl":"rounded-r-2xl rounded-bl-md bg-gray-100",
     data.image?"rounded-md":" py-2 px-3"
   )
 
 	return( 
   <div className={container}>
     <div className={body}>
-      <div className="flex flex-col items-end gap-1">
+      <div className="flex flex-col items-end gap-1 ">
         <div className="text-xs text-gray-500">
           {data.sender.name}
           

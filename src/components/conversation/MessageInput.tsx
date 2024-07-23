@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { ChangeEvent, useState } from "react";
 import { CldUploadButton, CldUploadWidget } from "next-cloudinary";
+import toast from "react-hot-toast";
 
 const MessageInput = () => {
 	const [message, setMessage] = useState("");
@@ -27,6 +28,9 @@ const MessageInput = () => {
 	});
 
 	const onSubmit: SubmitHandler<FieldValues> = (data) => {
+		
+		if(data.message.trim().length==0) return;
+		
 		axios.post("/api/messages", {
 			...data,
 			conversationId,

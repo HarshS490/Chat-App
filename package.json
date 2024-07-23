@@ -23,6 +23,7 @@
     "next-auth": "^4.24.7",
     "next-cloudinary": "^6.6.2",
     "next-superjson-plugin": "^0.6.3",
+    "nextjs-toploader": "^1.6.12",
     "prisma": "^5.16.1",
     "pusher": "^5.2.0",
     "pusher-js": "^8.4.0-rc2",
