@@ -1,6 +1,6 @@
 "use client";
 import { ChevronDown } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 type Props = {
   containerRef: React.RefObject<HTMLDivElement>;
@@ -11,7 +11,7 @@ const ScrollToBottom = ({ containerRef, threshold=100 }: Props) => {
   const [showButton,setShowButton] = useState<Boolean>(false);
   const [lastScrollTop, setLastScrollTop] = useState<number>(0);
 
-  const handleScroll = ()=>{
+  const handleScroll = useCallback(()=>{
     const container = containerRef.current;
     if(!container) return;
 
@@ -24,7 +24,7 @@ const ScrollToBottom = ({ containerRef, threshold=100 }: Props) => {
     }
 
     setLastScrollTop(currentScrollTop);
-  }
+  },[containerRef]);
 
   const scrollToBottom = ()=>{
     const container = containerRef.current;
@@ -43,7 +43,7 @@ const ScrollToBottom = ({ containerRef, threshold=100 }: Props) => {
     return ()=>{
       container?.removeEventListener('scroll',handleScroll);
     }
-  },[containerRef,lastScrollTop])
+  },[containerRef,lastScrollTop,handleScroll])
 
   return (
     <>
