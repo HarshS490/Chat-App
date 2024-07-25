@@ -15,9 +15,9 @@ const layout =async ({children}: Props) => {
   return (
     <Sidebar>
       <div className='h-full'>
-        <Suspense fallback={<Loading/>}>
         <ConversationList initialItems={conversations} users={users}/>
-        {children}
+        <Suspense fallback={<Loading/>}>
+          {children}
         </Suspense>
       </div>
     </Sidebar>

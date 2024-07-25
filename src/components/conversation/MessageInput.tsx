@@ -68,7 +68,7 @@ const MessageInput = () => {
 				>
 					<div className="relative w-full flex gap-1 space-x-4 space-x-reverse">
 						<input
-							className="text-black font-light py-2 px-4 bg-neutral-50 w-full rounded-full focus:outline-none "
+							className="font-light py-2 px-4 bg-gray-200/85 text-black w-full rounded-full focus:outline-none "
 							id="message"
 							placeholder="Message..."
 							{...register("message")}

@@ -21,58 +21,52 @@ const MessageBox = ({ data, isLast }: Props) => {
   .join(',');
 
   const container = clsx(
-    "flex gap-3 p-4",
+    "flex gap-1 p-1 ",
     isOwn&&" justify-end"
   );
 
   const body = clsx(
-    "flex flex-col gap-2",isOwn&&"items-end"
+    "flex flex-col gap-2 ",isOwn&&"items-end"
   )
 
   const message=clsx(
-    "text-sm w-fit overflow-hidden relative",isOwn?"bg-sky-600 text-white rounded-l-2xl rounded-br-2xl":"rounded-r-2xl rounded-bl-md bg-gray-100",
+    "text-sm w-fit overflow-hidden relative",isOwn?"bg-sky-600 text-white rounded-l-2xl rounded-br-2xl":"rounded-r-2xl rounded-bl-md bg-gray-100 self-start",
     data.image?"rounded-md":" py-2 px-3"
   )
 
 	return( 
   <div className={container}>
     <div className={body}>
-      <div className="flex flex-col items-end gap-1 ">
-        <div className="text-xs text-gray-500">
-          {data.sender.name}
-          
+        <div className="flex flex-col items-end gap-1 max-w-[400px]">
+          <div className={isOwn?"text-xs text-gray-500":"text-xs text-gray-500 self-start"}>
+            {data.sender.name}
+            
+          </div>
+        <div className={isOwn?"flex flex-row-reverse gap-2":"flex gap-2"}>
+          <div className={message}>
+            {
+              data.image?(
+                <>
+                <Image alt="Image" height="288" width="288" src={data?.image}
+                  className="object-cover cursor-pointer  hover:scale-110 transition translate"
+                ></Image>
+                </>
+              ):(
+                <div className="">
+                  <p>
+                    {data.body}
+                    &nbsp;
+                  </p>
+                </div>
+              )
+            }
+           
+          </div>
+          <p className="text-xs text-gray-500 font-semibold self-end flex-grow-0 flex-shrink-0">
+            {format(new Date(),'p')}
+          </p>
         </div>
-        <div className={message}>
-          {
-            data.image?(
-              <>
-              <Image alt="Image" height="288" width="288" src={data?.image}
-                className="object-cover cursor-pointer  hover:scale-110 transition translate"
-              ></Image>
-              <span className="absolute right-0 bottom-0">{format(new Date(data.createdAt),'p')}</span>
-              </>
-            ):(
-              <div className="p-1">
-                
-                <p className=" mb-1 ">
-                   {data.body}
-                   &nbsp;
-                </p>
-                  <span className="text-[10px] mr-0 absolute right-1 bottom-0 min-w-max block">{format(new Date(data.createdAt),'p')}</span>
-                
-
-              </div>
-            )
-          }
-          
-        </div>
-        {
-          isLast && isOwn && seenList.length>0 && (
-            <div className="text-xs font-light text-gray-500">
-              seen
-            </div>
-          )
-        }
+        
       </div>
     </div>
   </div>
