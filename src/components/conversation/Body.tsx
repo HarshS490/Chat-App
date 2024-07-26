@@ -10,20 +10,28 @@ import { getCurrentUser } from "@/app/actions/getCurrentUser";
 import { ChevronDown } from "lucide-react";
 import ScrollToBottom from "../ScrollToBottom";
 type Props = {
-  intialMessages: FullMessageType[];
+  intialMessages?: FullMessageType[];
 };
 
 const Body = ({ intialMessages }: Props) => {
-  const [messages, setMessages] = useState(intialMessages);
+  const [messages, setMessages] = useState<FullMessageType[]>([]);
 
   const bottomRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const { conversationId } = useConversation();
 
-
-  const scrollToBottom= ()=>{
+  const scrollToBottom = () => {
     bottomRef.current?.scrollIntoView();
-  } 
+  };
+
+  useEffect(() => {
+    const data = axios
+      .get(`/api/conversations/${conversationId}`)
+      .then((res) => setMessages(res.data))
+      .catch(() => toast.error("Error fetching messages"));
+    
+  }, []);
+
   // send the request to set the last message as seen in db.
   useEffect(() => {
     axios.post(`/api/conversations/${conversationId}/seen`).catch(() =>
@@ -32,7 +40,6 @@ const Body = ({ intialMessages }: Props) => {
       })
     );
   }, [conversationId]);
-
 
   // // subscribe the current user to the channel
   useEffect(() => {
@@ -71,8 +78,11 @@ const Body = ({ intialMessages }: Props) => {
         ></MessageBox>
       ))}
       <div ref={bottomRef} className="p-2"></div>
-      
-      <ScrollToBottom containerRef={containerRef} threshold={100} ></ScrollToBottom>
+
+      <ScrollToBottom
+        containerRef={containerRef}
+        threshold={100}
+      ></ScrollToBottom>
     </div>
   );
 };
