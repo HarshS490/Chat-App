@@ -64,13 +64,15 @@ const ConversationBox = ({ data, selected }: ConversationBoxProps) => {
 			<div className="min-w-0 flex-1">
 				<div className="flex justify-between mb-1 items-center w-full">
 					<div className="flex flex-col gap-1 w-full">
-						<p className="text-sm font-medium text-gray-900">{data.name || otherUser?.name}</p>
+						<div className="flex justify-between items-center">
+							<p className="text-sm font-medium text-gray-900">{data.name || otherUser?.name}</p>
+							{lastMessage?.createdAt && (
+								<span className="text-xs absolute right-0 ">{format(new Date(lastMessage.createdAt),'p')}</span>
+								)}
+						</div>
 						<div className="text-xs flex relative overflow-hidden  overflow-ellipsis">
 							<p className="overflow-hidden overflow-ellipsis line-clamp-1">{lastMessageText}</p>
-							{lastMessage?.createdAt && (
-							<span className="text-xs absolute right-0 ">{format(new Date(lastMessage.createdAt),'p')}</span>
-							)}
-
+							
 						</div>
 					</div>
 				</div>

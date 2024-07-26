@@ -7,7 +7,7 @@ import useConversation from "@/app/hooks/useConversation";
 import toast from "react-hot-toast";
 import { pusherClient } from "@/lib/pusher";
 import { getCurrentUser } from "@/app/actions/getCurrentUser";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Loader2 } from "lucide-react";
 import ScrollToBottom from "../ScrollToBottom";
 type Props = {
   intialMessages?: FullMessageType[];
@@ -15,7 +15,8 @@ type Props = {
 
 const Body = ({ intialMessages }: Props) => {
   const [messages, setMessages] = useState<FullMessageType[]>([]);
-
+  const [isLoading,setIsLoading] = useState(true);
+  const [error,setError] = useState(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const { conversationId } = useConversation();
@@ -27,8 +28,12 @@ const Body = ({ intialMessages }: Props) => {
   useEffect(() => {
     const data = axios
       .get(`/api/conversations/${conversationId}`)
-      .then((res) => setMessages(res.data))
-      .catch(() => toast.error("Error fetching messages"));
+      .then((res) =>{
+        setMessages(res.data);
+      })
+      .catch(() => toast.error("Error fetching messages"))
+      .finally(()=>setIsLoading(false));
+    
     
   }, []);
 
@@ -39,6 +44,8 @@ const Body = ({ intialMessages }: Props) => {
         id: "seen conversation fetching",
       })
     );
+
+   
   }, [conversationId]);
 
   // // subscribe the current user to the channel
@@ -68,6 +75,15 @@ const Body = ({ intialMessages }: Props) => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  if(isLoading){
+    return(
+      <div className="flex w-full h-full items-center justify-center">
+        <Loader2 className="animate-spin"></Loader2>
+      </div>
+    )
+  }  
+
   return (
     <div className="flex-1 overflow-y-auto px-7 mx-1 " ref={containerRef}>
       {messages.map((message, i) => (
