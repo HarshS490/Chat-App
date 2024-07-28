@@ -13,6 +13,7 @@ export async function POST(
     const {
       message,
       image,
+      public_id,
       conversationId
     } = body;
 
@@ -24,6 +25,7 @@ export async function POST(
       data:{
         body:message,
         image:image,
+        public_id:public_id,
         conversation:{
           connect:{
             id:conversationId

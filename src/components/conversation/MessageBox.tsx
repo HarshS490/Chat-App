@@ -34,7 +34,7 @@ const MessageBox = ({ data, isLast }: Props) => {
     isOwn
       ? "bg-sky-600 text-white rounded-l-2xl rounded-br-2xl"
       : "rounded-r-2xl rounded-bl-md bg-gray-100 self-start",
-    data.image ? "rounded-md" : " py-2 px-3"
+    data.image ? "rounded-md shadow-md shadow-border border border-gray-300" : " py-2 px-3"
   );
 
   
@@ -42,7 +42,7 @@ const MessageBox = ({ data, isLast }: Props) => {
   return (
     <div className={container}>
       <div className={body}>
-        <div className="flex flex-col items-end gap-1 max-w-[400px] relative">
+        <div className="flex flex-col items-end gap-1 max-w-md md:max-w-lg">
           
 
           <div
@@ -66,10 +66,11 @@ const MessageBox = ({ data, isLast }: Props) => {
                 <>
                   <Image
                     alt="Image"
-                    height="288"
-                    width="288"
+                    height={500}
+                    width={500}
                     src={data?.image}
-                    className="object-cover cursor-pointer  hover:scale-110 transition translate"
+                    sizes="(max-width:768px) 100vw, (max-width:1200px) 50vw,33vw"
+                    className=" object-cover cursor-pointer  hover:scale-110 transition translate"
                   ></Image>
                 </>
               ) : (

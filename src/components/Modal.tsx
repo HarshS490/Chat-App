@@ -18,7 +18,7 @@ const Modal = ({children,isOpen,handleClose}: Props) => {
   return (
     <>
       {isOpen&&
-        <div className='fixed w-screen h-screen  bg-gray-500/40 z-30 left-0 top-0' id='modalid'>
+        <div className='fixed w-screen h-screen  bg-black/30 z-30 left-0 top-0' id='modalid'>
         <div className='h-full flex justify-center items-center'  onClick={handleClick} ref={containerRef}>
           {children}
         </div>
