@@ -35,8 +35,7 @@ const GroupModal = ({ isOpen, onClose, users }: Props) => {
 	});
 
 	const members = watch("members");
-	const handleClose = (e:React.MouseEvent<HTMLElement,MouseEvent>)=>{
-		e.stopPropagation();
+	const handleModalClose = ()=>{
 		onClose();
 	} 
 	const onSubmit: SubmitHandler<FieldValues> = (data: FieldValues) => {
@@ -58,12 +57,12 @@ const GroupModal = ({ isOpen, onClose, users }: Props) => {
 	};
 
 	return (
-		<Modal isOpen={isOpen} handleClose={handleClose}>
+		<Modal isOpen={isOpen} handleClose={handleModalClose}>
 			<div className="w-96  relative bg-white rounded-md ">
 				<form onSubmit={handleSubmit(onSubmit)} className="p-2 ">
 					<div
 						className="absolute right-2 top-2 cursor-pointer active:scale-105 transition-transform"
-						onClick={handleClose}
+						onClick={handleModalClose}
 					>
 						<X size={16}></X>
 					</div>

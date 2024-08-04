@@ -1,25 +1,47 @@
-import { User } from '@prisma/client'
-import React from 'react'
-import UserBox from './UserBox'
+"use client";
+import { User } from "@prisma/client";
+import React, { useState } from "react";
+import UserBox from "./UserBox";
+import { FullConversationType } from "@/app/types";
+import FriendRequestModal from "./conversation/FriendRequestModal";
+import FriendRequest from "./user/FriendRequest";
 type Props = {
-  items:User[]
-}
+  items: User[];
+};
 
-const UsersList = ({items}: Props) => {
+const UsersList = ({ items }: Props) => {
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [ModalData, setModalData] = useState<User | null>(null);
+  const handleModalOpen = (data: User) => {
+    setModalData(data);
+    setIsModalOpen(true);
+  };
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  };
   return (
-    <aside className='fixed inset-y-0 pb-20 lg:pb-0 lg:left-20 lg:w-80 lg:block overflow-y-auto border-r border0gray-200 block w-full left-0'>
-      <div className='px-5'>
-        <div className='flex-col'>
-          <div className='text-2xl font-bol text-neutral-800 py-4'>
-            People
-          </div>
+    <>
+      <div>
+        <div className="flex-col">
+          <div className="text-2xl font-bol text-neutral-800 py-4">People</div>
         </div>
-        {items.map((item)=>(
-          <UserBox key={item.id} data={item}></UserBox>
-        ))}
+        <div className="flex flex-col">
+          {items.map((item) => (
+            <UserBox
+              data={item}
+              key={item.id}
+              handleModalOpen={handleModalOpen}
+            ></UserBox>
+          ))}
+        </div>
+        <FriendRequestModal
+          isOpen={isModalOpen}
+          handleClose={handleModalClose}
+          data={ModalData}
+        ></FriendRequestModal>
       </div>
-    </aside>
-  )
-}
+    </>
+  );
+};
 
-export default UsersList
+export default UsersList;

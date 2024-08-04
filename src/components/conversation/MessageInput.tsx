@@ -59,8 +59,7 @@ const MessageInput = () => {
     "image/svg+xml",
   ];
 
-  const handleClose = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    e.stopPropagation();
+  const handleClose = () => {
     handleRemoveAllFiles();
     setIsModalOpen(false);
   };

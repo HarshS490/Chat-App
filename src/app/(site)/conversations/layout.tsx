@@ -14,7 +14,7 @@ const layout =async ({children}: Props) => {
   const users  = await getUsers();
   return (
     <Sidebar>
-      <div className='h-full'>
+      <div className='h-full '>
         <ConversationList initialItems={conversations} users={users}/>
         <Suspense fallback={<Loading/>}>
           {children}

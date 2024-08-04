@@ -1,37 +1,55 @@
 "use client";
 import axios from 'axios';
 import { User } from '@prisma/client'
-import { useRouter } from 'next/navigation'
-import React, { useCallback, useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import React, { useCallback, useMemo, useState } from 'react'
 import toast from 'react-hot-toast';
 import Avatar from './sidebar/Avatar';
+import { useSession } from 'next-auth/react';
+import clsx from 'clsx';
 
 type Props = {
   data:User
+  handleModalOpen:(data:User)=>void
 }
 
-function UserBox({data}: Props) {
+function UserBox({data,handleModalOpen}: Props) {
   const router = useRouter();
   const [isLoading,setIsLoading] = useState(false);
+  const session = useSession();
+  const isCurrentUser = useMemo(()=>{
+    if(session.data?.user?.email===data.email){
+      return true;
+    }
+    return false;
+  },[session,data]);
 
   const handleClick = ()=>{
     setIsLoading(true);
-    axios.post('/api/conversations',{
-      userId: data.id
-    }).then((data)=>{
-      router.push(`/conversations/${data.data.id}`);
-    })
-    .catch((error)=>{
-      toast.error('Error while fetching data',{
-        id:'conversation fetch'
-      });
-    })
-    .finally(()=>setIsLoading(false));
+    if(isCurrentUser){
+
+      axios.post('/api/conversations',{
+        userId: data.id
+      }).then((data)=>{
+        router.push(`/conversations/${data.data.id}`);
+      })
+      .catch((error)=>{
+        toast.error('Error while fetching data',{
+          id:'conversation fetch'
+        });
+      })
+      .finally(()=>setIsLoading(false));
+    }
+    else{
+      handleModalOpen(data);
+    }
   }
+  const container = clsx('p-2 w-full relative flex items-center bg-white space-x-3 hover:bg-neutral-100 rounded-lg transition cursor-pointer',isCurrentUser?'':'order-1')  
   return (
     <div
       onClick={handleClick}
-      className='p-2 w-full relative flex items-center bg-white space-x-3 hover:bg-neutral-100 rounded-lg transition cursor-pointer'
+      
+      className={container}
     >
       <Avatar user={data}></Avatar>
 

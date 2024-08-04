@@ -1,0 +1,2 @@
+
+// delete the friend request

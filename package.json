@@ -25,6 +25,7 @@
     "next-cloudinary": "^6.6.2",
     "next-superjson-plugin": "^0.6.3",
     "nextjs-toploader": "^1.6.12",
+    "plaiceholder": "^3.0.0",
     "pusher": "^5.2.0",
     "pusher-js": "^8.4.0-rc2",
     "react": "^18",

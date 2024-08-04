@@ -11,6 +11,7 @@ import { User } from "@prisma/client";
 import { pusherClient } from "@/lib/pusher";
 import { getCurrentUser } from "@/app/actions/getCurrentUser";
 import { useSession } from "next-auth/react";
+import FriendRequestModal from "./FriendRequestModal";
 type Props = {
 	initialItems: FullConversationType[];
 	users:User[];
@@ -25,7 +26,8 @@ const ConversationList = ({ initialItems,users }: Props) => {
 	const session = useSession();
 
 	const pusherChannel = useMemo(()=>session.data?.user?.email,[session.data?.user?.email]) ;
-	console.log('pusher channel:',pusherChannel);
+	// console.log('pusher channel:',pusherChannel);
+
 	useEffect(()=>{
 		console.log('subscribing to pusher');
 		if(!pusherChannel) return;
@@ -70,14 +72,16 @@ const ConversationList = ({ initialItems,users }: Props) => {
 
 	},[pusherChannel]);
 
+  
+
 	return (
 		<>
 		{isGroupModalOpen?(<GroupModal isOpen={isGroupModalOpen} onClose={()=>setIsGroupModalOpen(false)} users={users}></GroupModal>):<></>}
 		<aside
 			className={
 				isOpen
-					? "fixed inset-y-0 pb-20 lg:pb-0 lg:left-20 w-80 lg:block overflow-y-auto border-r border-gray-200 hidden"
-					: "fixed inset-y-0 pb-20 lg:pb-0 lg:left-20 w-80 lg:block overflow-y-auto border-r border-gray-200 block"
+					? "fixed inset-y-0 pb-20 lg:pb-0 lg:left-20 w-full lg:w-80 lg:block overflow-y-auto border-r border-gray-200 hidden"
+					: "fixed inset-y-0 pb-20 lg:pb-0 lg:left-20 w-full md:w-[765px] md:max-lg:left-1/2 md:max-lg:-translate-x-2/4 lg:w-80 lg:block overflow-y-auto border-r border-gray-200 block"
 			}
 		>
 			<div className="px-5">
@@ -92,9 +96,13 @@ const ConversationList = ({ initialItems,users }: Props) => {
 
         {
           items.map((item)=>(
-            <ConversationBox key={item.id} data ={item} selected={conversationId===item.id}/>
+            
+              <ConversationBox key={item.id} data ={item} selected={conversationId===item.id}/>
+         
           ))
         }
+
+        
 			</div>
 		</aside>
 		</>  
