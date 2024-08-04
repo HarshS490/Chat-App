@@ -1,11 +1,8 @@
 import getRequests from "@/app/actions/getRequests";
-import { FullRequestType } from "@/app/types";
-import { useSession } from "next-auth/react";
-import { getRedirectStatusCodeFromError } from "next/dist/client/components/redirect";
+
 import React, { useEffect, useState } from "react";
-import toast from "react-hot-toast";
-import FriendRequestBox from "./FriendRequestBox";
-import { request } from "http";
+
+import FriendRequestList from "./FriendRequestList";
 
 type Props = {};
 
@@ -19,12 +16,7 @@ const FriendRequest = async (props: Props) => {
       </h1>
       <div className="px-1">
         {requests && requests.length > 0 ? (
-          requests?.map((request) => (
-            <FriendRequestBox
-              key={request.id}
-              request={request}
-            ></FriendRequestBox>
-          ))
+          <FriendRequestList data={requests}></FriendRequestList>
         ) : (
           <p>No Friend Requests found</p>
         )}

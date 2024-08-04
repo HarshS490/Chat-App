@@ -6,7 +6,7 @@ import { link } from "fs";
 
 type Props = {
   isOpen?: boolean;
-  handleClose: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+  handleClose: () => void;
   fileList?:File[];
   inputRef:React.RefObject<HTMLInputElement>
 };

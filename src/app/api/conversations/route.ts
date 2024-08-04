@@ -15,7 +15,6 @@ export async function POST(req:Request){
       isGroup,
       members,
       name,
-      friendRequest
     } = body;
 
     if(!currentUser?.id || !currentUser?.email){
@@ -83,23 +82,7 @@ export async function POST(req:Request){
       return NextResponse.json(singleConversation,{status:200});
     }
 
-    // acccept friend request;
-    if(!friendRequest){
-      return new NextResponse("Cannot create converstaion without friend request",{status:400});
-    }
-    const acceptRequest = await prisma.friendRequest.update({
-      where:{
-        id:friendRequest.requestId,
-      },
-      data:{
-        status:friendRequest.status,
-      }
-    });
-    if(!acceptRequest){
-      return new NextResponse("failed to accept request",{status:500});
-    }
-    // emit the 
-
+    
     const newConversation = await prisma.conversation.create({
       data:{
         users:{

@@ -1,46 +1,52 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prismadb";
-import { connect } from "http2";
-import { send } from "process";
-import { request } from "http";
+import { getCurrentUser } from "@/app/actions/getCurrentUser";
+import { pusherServer } from "@/lib/pusher";
+import FriendRequest from "@/components/user/FriendRequest";
+
 
 export async function POST(req: NextRequest) {
-  const body = await req.json();
-  console.log(body);
-  const { senderEmail, receiver } = body;
   try {
-    // find the senders data.
-    const sender = await prisma.user.findUnique({
-      where: {
-        email: senderEmail,
-      },
-      select: {
-        name: true,
-        email: true,
-        id: true,
-      },
-    });
-
-    if (!sender) {
-      return new NextResponse("No sender found ", { status: 400 });
+    const body = await req.json();
+    const {receiver } = body;
+    const currentUser = await getCurrentUser();
+    if(!currentUser?.id || !currentUser?.email){
+      return new NextResponse('Unauthorized',{status:401});
     }
-
+    
     // check if friend request already exists
     const existingRequest = await prisma.friendRequest.findFirst({
       where: {
-        senderId: sender.id,
+        senderId: currentUser.id,
         receiverId: receiver.id,
       },
     });
     if (existingRequest) {
       return new NextResponse("Friend request already sent", { status: 400 });
     }
+
+    const isFriends = await prisma.friendShip.findFirst({
+      where:{
+        OR:[
+          {userId:currentUser.id,
+            friendId:receiver.id,
+          },
+          {
+            userId:receiver.id,
+            friendId:currentUser.id
+          }
+        ]
+      }
+    });
+    if(isFriends){
+      return new NextResponse("Already friends",{status:400});
+    }
     // create a friend Request and save in db;
     const newFriendRequest = await prisma.friendRequest.create({
       data: {
         sender: {
           connect: {
-            id: sender.id,
+            id: currentUser.id,
           },
         },
         receiver: {
@@ -49,36 +55,33 @@ export async function POST(req: NextRequest) {
           },
         },
       },
+      include:{
+        sender:{
+          select:{
+            name:true,
+            id:true,
+            email:true,
+            image:true,
+          }
+        },
+        receiver:{
+          select:{
+            name:true,
+            id:true,
+            email:true,
+            image:true,
+          }
+        }
+      }
+      
     });
 
-    return NextResponse.json({ newFriendRequest }, { status: 201 });
+    pusherServer.trigger(receiver.email,"friendRequest",newFriendRequest);
+    console.log("friendRequest sent");
+    return NextResponse.json({ newFriendRequest }, { status: 200 });
   } catch (error) {
     console.error(error);
     return new NextResponse("Error creating friend Request", { status: 500 });
   }
 }
 
-export async function GET(req: NextRequest) {
-  const body = await req.json();
-  const userEmail = body.userEmail;
-  try {
-    if(!userEmail){
-      return new NextResponse("Missing data in request",{status:400});
-    }
-    const requests = await prisma.user.findUnique({
-      where: {
-        email: userEmail,
-      },
-      include: {
-        requestsRecieved: true,
-        requestsSent: true,
-      },
-    });
-
-    return NextResponse.json(requests,{status:200});
-  } catch (error) {
-
-    console.error(error);
-    return new NextResponse("Error fetching friend requests",{status:500});
-  }
-}

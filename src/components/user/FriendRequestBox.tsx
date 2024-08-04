@@ -4,7 +4,7 @@ import { FriendRequest } from "@prisma/client";
 import Image from "next/image";
 import React, { useState } from "react";
 import { Button } from "../ui/button";
-import { Check, X } from "lucide-react";
+import { Check, Info, X } from "lucide-react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
@@ -22,17 +22,16 @@ const FriendRequestBox = ({ request }: Props) => {
 
     // TO DO : change the routes from "/conversation" to "/friendRequest/accept"
     axios
-      .post("/api/conversations", {
-        userId: request.senderId,
-        friendRequest:{
-          requestId:request.id,
-          status:'accepted',
-        },
+      .post("/api/friendRequest/accept", {
+        senderId: request.senderId,
+        friendRequestId:request.id,
+        receiverId: request.receiverId,
       })
       .then((data) => {
         router.push(`/conversations/${data.data.id}`);
       })
       .catch((error) => {
+        
         toast.error("Error while fetching data", {
           id: "conversation fetch",
         });
@@ -42,6 +41,12 @@ const FriendRequestBox = ({ request }: Props) => {
 
   const declineRequest = async ()=>{
     // To DO : make a post request to "/friendRequest/decline"
+    axios.post("/api/friendRequest/decline",{
+      friendRequestId:request.id,
+    })
+    .then(()=>toast("Declined Request",{
+      id:'friendRequestDecline',
+    }))
   }
   return (
     <>
@@ -67,6 +72,7 @@ const FriendRequestBox = ({ request }: Props) => {
                 variant={"ghost"}
                 className="bg-red-500 hover:bg-red-500/80 rounded-full w-7 h-7 "
                 size={"icon"}
+                onClick={declineRequest}
               >
                 <X className="text-white"></X>
               </Button>

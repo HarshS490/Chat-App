@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prismadb"
+import { pusherServer } from "@/lib/pusher";
 // change the status of friend request
 // create a friendship entry
 
@@ -33,6 +34,9 @@ export async function POST(req: NextRequest) {
               {id:receiverId}
             ]
           }
+        },
+        include:{
+          users:true,
         }
       })
     ]);
@@ -45,6 +49,10 @@ export async function POST(req: NextRequest) {
     if(!conversation){
       return new NextResponse("error creating a conversation",{status:500})
     }
+
+    conversation.users.map((user)=>{
+      pusherServer.trigger(user.email,'newConversation',conversation);
+    })
 
     return NextResponse.json(conversation,{status:200});
   } catch (error) {

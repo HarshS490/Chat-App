@@ -30,7 +30,9 @@ const FriendRequestModal = ({ handleClose, data, isOpen }: Props) => {
       })
       .then(() => toast.success("Friend Request sent"))
       .then(() => handleClose())
-      .catch(() => toast.error("Error sending friend request"))
+      .catch((error) =>{
+        toast.error(error.response.data);
+      })
       .finally(() => setIsLoading(false));
   };
   return (
